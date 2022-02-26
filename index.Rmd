@@ -49,7 +49,7 @@ What are possible limitations or problems with this data?   (at least 200 words)
 ### Trends Over Time Chart
 
 ```{r, echo = FALSE, message = FALSE, warning = FALSE}
-np_jail <- read.csv("incarceration_trends.csv")
+np_jail <- read.csv("https://github.com/vera-institute/incarceration-trends/blob/master/incarceration_trends.csv")
 
 library(dplyr)
 library(tidyr)
