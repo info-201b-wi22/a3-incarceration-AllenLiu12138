@@ -5,67 +5,388 @@ output: html_document
 
 ### Introduction
 
-An introduction of the problem domain and a description of the variable(s) you are choosing to analyze (and why!)
+When people think about people in jail, the first impression tend to be man. However, women are also has high proportion in jail. By analyse data, I am able to see the detail about trending and how it spread across Washington state.
 
 ### Summary Information
 
-Write a summary paragraph of findings that includes the 5 values calculated from your summary information R script
+```{r include = FALSE, echo = FALSE}
 
-These will likely be calculated using your DPLYR skills, answering questions such as: 
+source("summary.R")
 
-- What is the average value of my variable across all the counties (in the current year)?
-- Where is my variable the highest / lowest?
-- How much has my variable change over the last N years?
-
-Feel free to calculate and report values that you find relevant. Again, remember that the purpose is to think about how these measure of incarceration vary by race.
+```
+- The data shows that the state that has the most number of population in jail is `r most_pop_state`. And the number of population is `r most_pop_num`. This report is place emphasis on analysis female data over time at Washington. The number of female in 2001 in jail at Washington is `r female_in_Wa_2001`.The number of female in 2010 in jail at Washington is `r female_in_Wa_2010`. The difference between them within ten years is `r diff_female`.
 
 ### The Dataset
 
 Who collected the data?  
-How was the data collected or generated?  
+
+- This This work employed two Bureau of Justice Statistics (BJS) data collections: the Census of Jails (COJ), which covers all jails and is conducted every five to eight years since 1970, and the Annual Survey of Jails (ASJ), which covers about one-third of jails—and includes nearly all of the largest jails—that has been conducted in non-census years since 1982
+
+How was the data collected or generated?
+
+- The data conducted every five to eight years since 1970 and one third of jail and includes nearly all of the largest jails that has been conducted in non-census years since 1982.
+
 Why was the data collected?  
+
+- The reason why this document collected is to provide detain on the source and variables in the incarceration Trends dataset, much of which can be visualized using the Incarceration Trends data tool.
+
 How many observations (rows) are in your data?  
-How many features (columns) are in the data?  
-What, if any, ethical questions or questions of power do you need to consider when working with this data?  
+
+- There are 153811 rows in the data.
+
+How many features (columns) are in the data?
+
+- There are 121 columns in the data set. 
+
+What, if any, ethical questions or questions of power do you need to consider when working with this data?
+
+- Is investigating such data invade jail policy and privacy of people who in jail?
+
 What are possible limitations or problems with this data?   (at least 200 words)
 
+- During the collection, the number of collects may not be that accurate due to some jail policy. The chart only includes the gender of males and females. If I want to investigate gender that besides male and female, the data do not support me do it. Also, the earliest data is in 2018, which is four years from now. What if I want to analyze the Covid impact on the population of the jail. The data's limitation showed up. Some of the data is NA, which causes some specific analyses can not be conducted. In the same year, the data set gives out many different data because they are different counties and states. However, it is hard for users to analyze based on time because filtering by year will not result from anything since there are many repetitive data under the same year. The concern is regarding the privacy of the data conduction. If the data is conducted by an official, some people may don't want to disclose their data. And the data of each other may be overlapping with each other. Also, the data is complex to use. It required a codebook to understand all the variables. And the variable name is all similar.
 
 ### Trends Over Time Chart
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+np_jail <- read.csv("incarceration_trends.csv")
 
-The first chart that you will create and include will show the trend over time of your variable/topic. Think carefully about what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(maps)
+top_pop_female_WA_2001 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2001) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
 
-- Show more than one, but fewer than ~10 trends
-  - This may mean showing the same measure for different locations or different racial groups. Think carefully about a meaningful comparison of locations (e.g., the top 10 counties in a state, top 10 states, etc.)
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- You need a legend for your different line colors and a clear legend title
+top_pop_female_WA_2002 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2002) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64))%>% 
+  pull(female_pop_15to64)
 
-When we say "clear" or "human readable" titles and labels, that means that you should not just display the variable name.
+top_pop_female_WA_2003 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2003) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
 
-Here's an example of how to run an R script inside an RMarkdown file:
+top_pop_female_WA_2004 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2004) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
 
-``````{r, echo = FALSE, code = readLines("chart1_example.R")}
+top_pop_female_WA_2005 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2005) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>%
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2006 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2006) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2007 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2007) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2008 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2008) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2009 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2009) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2010 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2010) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_ten_years <- list(top_pop_female_WA_2001, top_pop_female_WA_2002, top_pop_female_WA_2003, top_pop_female_WA_2004, top_pop_female_WA_2005, top_pop_female_WA_2006, top_pop_female_WA_2007, top_pop_female_WA_2008, top_pop_female_WA_2009, top_pop_female_WA_2010)
+
+
+top_year_female_WA_2001 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2001) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2002 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2002) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2003 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2003) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2004 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2004) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2005 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2005) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>%
+  pull(year)
+
+top_year_female_WA_2006 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2006) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2007 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2007) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2008 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2008) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2009 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2009) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+
+top_year_female_WA_2010 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2010) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_ten_year <- list(top_year_female_WA_2001, top_year_female_WA_2002, top_year_female_WA_2003, top_year_female_WA_2004, top_year_female_WA_2005, top_year_female_WA_2006, top_year_female_WA_2007, top_year_female_WA_2008, top_year_female_WA_2009, top_year_female_WA_2010)
+
+female_ten_year <- data_frame(top_year_female_WA_ten_year, top_pop_female_WA_ten_years)
+
+ggplot(data = female_ten_year) +
+  geom_col(mapping = aes( color = top_year_female_WA_ten_year ,x = as.numeric(top_year_female_WA_ten_year), y = top_pop_female_WA_ten_years, ))+
+    labs(title = "Number of female in jail in WA over time",
+       x = "time",
+       y = "Number of people", color = "year"
+       )
+
+
 ```
+
+- conclusion :
+  In this chart, We can observe data from 2001 to 2010 of number of female population in jail. Which shows the trending of female population in Washington in jail is in increasing trending. The reason why I use bar chart it to clearly see the difference between years. 
 
 ### Variable Comparison Chart
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
 
-The second chart that you will create and include will show how two different (continuous) variables are related to one another. Again, think carefully about what such a comparison means and what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(maps)
+top_pop_female_WA_2001 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2001) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
 
-- You must have clear x and y axis labels
-- The chart needs a clear title 
-- If you choose to add a color encoding (not required), you need a legend for your different color and a clear legend title
+top_pop_female_WA_2002 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2002) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64))%>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2003 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2003) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2004 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2004) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(female_pop_15to64)
+
+top_pop_female_WA_2005 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2005) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>%
+  pull(female_pop_15to64)
+
+top_pop_male_WA_2001 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2001) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(male_pop_15to64)
+
+top_pop_male_WA_2002 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2002) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(male_pop_15to64)
+
+top_pop_male_WA_2003 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2003) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(male_pop_15to64)
+
+top_pop_male_WA_2004 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2004) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(male_pop_15to64)
+
+top_pop_male_WA_2005 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2005) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(male_pop_15to64)
+
+top_pop_male_WA <- list(top_pop_male_WA_2001, top_pop_male_WA_2002, top_pop_male_WA_2003, top_pop_male_WA_2004, top_pop_male_WA_2005)
+
+top_pop_female_WA <- list(top_pop_female_WA_2001, top_pop_female_WA_2002, top_pop_female_WA_2003, top_pop_female_WA_2004, top_pop_female_WA_2005)
+
+
+top_year_female_WA_2001 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2001) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2002 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2002) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2003 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2003) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2004 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2004) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>% 
+  pull(year)
+
+top_year_female_WA_2005 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2005) %>% 
+  filter(female_pop_15to64 == max(female_pop_15to64)) %>%
+  pull(year)
+
+top_year_male_WA_2001 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2001) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(year)
+
+top_year_male_WA_2002 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2002) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(year)
+
+top_year_male_WA_2003 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2003) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(year)
+
+top_year_male_WA_2004 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2004) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(year)
+
+top_year_male_WA_2005 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2005) %>% 
+  filter(male_pop_15to64 == max(male_pop_15to64)) %>% 
+  pull(year)
+
+top_year_male_WA <- list(top_year_male_WA_2001, top_year_male_WA_2002, top_year_male_WA_2003, top_year_male_WA_2004, top_year_male_WA_2005)
+
+top_year_female_WA <- list(top_year_female_WA_2001, top_year_female_WA_2002, top_year_female_WA_2003, top_year_female_WA_2004, top_year_female_WA_2005)
+
+male <- data_frame(top_year_male_WA, top_pop_male_WA)
+female <- data_frame(top_year_female_WA, top_pop_female_WA)
+
+ggplot(data = male) +
+  geom_col(mapping = aes(x = as.numeric(top_year_male_WA), y = top_pop_male_WA, fill = top_year_male_WA))+
+    labs(title = "Number of male in jail in WA over time",
+       x = "time",
+       y = "Number of people")+
+  coord_flip()
+
+ggplot(data = female) +
+  geom_col(mapping = aes(x = as.numeric(top_year_female_WA), y = top_pop_female_WA, , fill = top_year_female_WA))+
+    labs(title = "Number of female in jail in WA over time",
+       x = "time",
+       y = "Number of people"
+       )+
+  coord_flip()
+```
+
+- conclusion :
+  In these two charts, I collect number of people trending of male and female in Washington who in jail from 2001 to 2005. Comparing those two data I could observe that slop of female who in the jail is higher than male. However, overall, the number of people of male who in the jail is more than female. The reason why I use two bar chart to show the difference is to show the difference between each year and difference between male and female
 
 ### Map
 
-Include a chart. Make sure to describe why you included the chart, and what patterns emerged
+```{r echo = FALSE, message = FALSE, warning = FALSE}
+install.packages("usmap", repos = "https://usmap.dev")
+library("usmap")
 
-The last chart that you will create and include will show how a variable is distributed geographically. Again, think carefully about what such a comparison means and what you want to communicate to your user (you may have to find relevant trends in the dataset first!). Here are some requirements to help guide your design:
 
-- Your map needs a title
-- Your color scale needs a legend with a clear label
-- Use a map based coordinate system to set the aspect ratio of your map
-- Use a minimalist theme for the map 
+map_year_female_WA_2010 <- np_jail %>% 
+  filter(state == "WA") %>% 
+  filter(year == 2010) %>% 
+  select(female_pop_15to64, county_name)
+
+np_WA_pop <- countypop %>% 
+  filter(abbr == "WA")
+np_WA_pop <-right_join(np_WA_pop, map_year_female_WA_2010, by = c('county' = 'county_name'))
+
+
+
+plot_usmap(
+    data = np_WA_pop, values = "female_pop_15to64", include = c("WA"), color = "red"
+  ) + 
+  scale_fill_continuous(
+    low = "white", high = "red", name = "Population of female in jail in Washington", label = scales::comma
+  ) + 
+  labs(title = "Map of Washington", subtitle = "There are population density of female who in jail") +
+  theme(legend.position = "right")
+
+
+
+```
+
+- conclusion:
+  Based on this map, I am able to observe the county within Washington has the most number of female population in jail. Which is a left-center part of the state.
+
+
